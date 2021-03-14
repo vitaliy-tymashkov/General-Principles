@@ -31,11 +31,6 @@ public class UserReportController {
         return "User Total: " + amount + "$";
     }
 
-
-    public UserReportBuilder getUserReportBuilder() {
-        return userReportBuilder;
-    }
-
     public void setUserReportBuilder(UserReportBuilder userReportBuilder) {
         this.userReportBuilder = userReportBuilder;
     }
