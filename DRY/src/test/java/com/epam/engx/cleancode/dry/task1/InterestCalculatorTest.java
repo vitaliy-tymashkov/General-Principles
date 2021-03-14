@@ -60,6 +60,9 @@ public class InterestCalculatorTest {
     }
 
     private void assertInterest(Account accountDetails, double expected) {
-        assertEquals(expected, new InterestCalculator().calculateInterest((AccountDetails) accountDetails).doubleValue(), DELTA);
+        double actualInterest = new InterestCalculator()
+                .calculateInterest((AccountDetails) accountDetails)
+                .doubleValue();
+        assertEquals(expected, actualInterest, DELTA);
     }
 }
