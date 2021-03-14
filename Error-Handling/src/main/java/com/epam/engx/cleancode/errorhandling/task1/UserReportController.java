@@ -6,33 +6,25 @@ public class UserReportController {
 
     private UserReportBuilder userReportBuilder;
 
-    public String getUserTotalOrderAmountView(String userId, Model model){
-        String totalMessage = getUserTotalMessage(userId);
-        if (totalMessage == null) {
+    public String getUserTotalOrderAmountView(String userId, Model model) {
+        String totalMessage;
+        try {
+            totalMessage = getUserTotalMessage(userId);
+        } catch (DatabaseConnectionException e) {
             return "technicalError";
         }
+
         model.addAttribute("userTotalMessage", totalMessage);
         return "userTotal";
     }
 
-    private String getUserTotalMessage(String userId) {
-
-        Double amount = userReportBuilder.getUserTotalOrderAmount(userId);
-
-        if (amount == null) {
-            return null;
+    private String getUserTotalMessage(String userId) throws DatabaseConnectionException {
+        Double amount;
+        try {
+            amount = userReportBuilder.getUserTotalOrderAmount(userId);
+        } catch (UserException e) {
+            return e.getDescription();
         }
-
-        if (amount == -1) {
-            return "WARNING: User ID doesn't exist.";
-        }
-        if (amount == -2) {
-            return "WARNING: User have no submitted orders.";
-        }
-        if (amount == -3) {
-            return "ERROR: Wrong order amount.";
-        }
-
         return "User Total: " + amount + "$";
     }
 

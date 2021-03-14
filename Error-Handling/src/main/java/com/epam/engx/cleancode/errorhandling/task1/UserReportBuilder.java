@@ -6,11 +6,13 @@ import com.epam.engx.cleancode.errorhandling.task1.thirdpartyjar.UserDao;
 
 import java.util.List;
 
+import static com.epam.engx.cleancode.errorhandling.task1.ERROR_ENUM.*;
+
 public class UserReportBuilder {
 
     private UserDao userDao;
 
-    public Double getUserTotalOrderAmount(String userId) {
+    public Double getUserTotalOrderAmount(String userId) throws IllegalArgumentException {
 
         if (userDao == null) {
             throw new DatabaseConnectionException();
@@ -18,22 +20,21 @@ public class UserReportBuilder {
 
         User user = userDao.getUser(userId);
         if (user == null) {
-            return -1.0;
+            throw new InvalidUserException(INVALID_USER);
         }
 
         List<Order> orders = user.getAllOrders();
-
         if (orders.isEmpty()) {
-            return -2.0;
+            throw new InvalidUserException(EMPTY_ORDERS);
         }
 
-        Double sum = 0.0;
+        Double sum = 0.0D;
         for (Order order : orders) {
 
             if (order.isSubmitted()) {
                 Double total = order.total();
                 if (total < 0) {
-                    return -3.0;
+                    throw new InvalidUserException(ORDER_TOTAL_LESS_THAN_ZERO);
                 }
                 sum += total;
             }
