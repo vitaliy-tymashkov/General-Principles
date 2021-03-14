@@ -33,7 +33,7 @@ public final class InterestCalculatorUtility {
         return durationBetweenDatesInYears(accountDetails.getBirth(), accountDetails.getStartDate()) > BONUS_AGE;
     }
 
-    private static int durationBetweenDatesInYears(Date from, Date to) {
+    public static int durationBetweenDatesInYears(Date from, Date to) {
         Calendar startCalendar = new GregorianCalendar();
         startCalendar.setTime(from);
         Calendar endCalendar = new GregorianCalendar();

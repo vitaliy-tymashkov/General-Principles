@@ -15,7 +15,7 @@ public final class InterestCalculatorTestUtility {
     public static Account makeAccountDetails(double balance, int age, int startedYearsAgo) {
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.setBalance(new BigDecimal(balance));
-        accountDetails.setAge(age);
+//        accountDetails.setAge(age);
         accountDetails.setBirth(getCurrentDateMinusYears(age));
         accountDetails.setStartDate(getCurrentDateMinusYears(startedYearsAgo));
         return accountDetails;

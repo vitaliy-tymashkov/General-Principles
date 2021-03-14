@@ -9,7 +9,6 @@ public class AccountDetails implements Account {
     private Date birth;
     private Date startDate;
     private BigDecimal balance;
-    private int age;
 
     @Override
     public Date getBirth() {
@@ -37,13 +36,4 @@ public class AccountDetails implements Account {
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
-
-    public int getAge() {
-        return age;       // should depend on current time
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
 }

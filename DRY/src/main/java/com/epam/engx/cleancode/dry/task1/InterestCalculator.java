@@ -5,6 +5,7 @@ import static com.epam.engx.cleancode.dry.task1.InterestCalculatorUtility.*;
 import com.epam.engx.cleancode.dry.task1.thirdpartyjar.Profitable;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class InterestCalculator implements Profitable {
 
@@ -21,7 +22,8 @@ public class InterestCalculator implements Profitable {
 
     private BigDecimal interest(AccountDetails accountDetails) {
         BigDecimal interest;
-        if (isSeniorAge(accountDetails.getAge())) {
+        Date now = new Date();
+        if (isSeniorAge(durationBetweenDatesInYears(accountDetails.getBirth(), now))) {
             interest = getInterest(accountDetails, SENIOR_PERCENT);
         } else {
             interest = getInterest(accountDetails, COMMON_PERCENT);
