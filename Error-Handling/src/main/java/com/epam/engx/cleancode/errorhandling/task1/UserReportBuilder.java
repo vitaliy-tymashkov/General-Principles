@@ -13,7 +13,7 @@ public class UserReportBuilder {
     public Double getUserTotalOrderAmount(String userId) {
 
         if (userDao == null) {
-            return null;
+            throw new DatabaseConnectionException();
         }
 
         User user = userDao.getUser(userId);
