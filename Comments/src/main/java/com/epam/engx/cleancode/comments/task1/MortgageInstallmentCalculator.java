@@ -1,12 +1,15 @@
 package com.epam.engx.cleancode.comments.task1;
 
 import com.epam.engx.cleancode.comments.task1.thirdpartyjar.InvalidInputException;
+import com.google.common.math.DoubleMath;
 
 public class MortgageInstallmentCalculator {
 
     private static final int MINIMUM_VALUE = 0;
     private static final int MONTHS_IN_YEAR = 12;
     private static final double RATE_OF_INTEREST_IN_PERCENT_BASE = 100.0D;
+    private static final double EPSILON = 0.000001D;
+    private static final double ZERO_DOUBLE = 0D;
 
     public static double calculateMonthlyPayment(
             int principalAmount, int termOfMortgageInYears, double rateOfInterestInPercent) {
@@ -17,13 +20,15 @@ public class MortgageInstallmentCalculator {
         double rateOfInterestDecimalValue = getRateOfInterestDecimalValue(rateOfInterestInPercent);
         double monthlyRate = getMonthlyRate(rateOfInterestDecimalValue);
 
-        //for zero interest rates
-        if(rateOfInterestDecimalValue==0) {
+        if(isInterestEqualsZero(rateOfInterestDecimalValue)) {
             return  principalAmount/termInMonths;
         }
 
-
         return getMonthlyPayment(principalAmount, termInMonths, monthlyRate);
+    }
+
+    private static boolean isInterestEqualsZero(double rateOfInterestDecimalValue) {
+        return DoubleMath.fuzzyEquals(ZERO_DOUBLE, rateOfInterestDecimalValue, EPSILON);
     }
 
     private static double getRateOfInterestDecimalValue(double rateOfInterestInPercent) {
