@@ -8,8 +8,9 @@ public class UserReportController {
 
     public String getUserTotalOrderAmountView(String userId, Model model){
         String totalMessage = getUserTotalMessage(userId);
-        if (totalMessage == null)
+        if (totalMessage == null) {
             return "technicalError";
+        }
         model.addAttribute("userTotalMessage", totalMessage);
         return "userTotal";
     }
@@ -18,15 +19,19 @@ public class UserReportController {
 
         Double amount = userReportBuilder.getUserTotalOrderAmount(userId);
 
-        if (amount == null)
+        if (amount == null) {
             return null;
+        }
 
-        if (amount == -1)
+        if (amount == -1) {
             return "WARNING: User ID doesn't exist.";
-        if (amount == -2)
+        }
+        if (amount == -2) {
             return "WARNING: User have no submitted orders.";
-        if (amount == -3)
+        }
+        if (amount == -3) {
             return "ERROR: Wrong order amount.";
+        }
 
         return "User Total: " + amount + "$";
     }
