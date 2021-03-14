@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Calendar;
 
-import static com.epam.engx.cleancode.dry.task1.InterestCalculatorTestHelper.makeAccountDetails;
+import static com.epam.engx.cleancode.dry.task1.InterestCalculatorTestUtility.makeAccountDetails;
 import static org.junit.Assert.assertEquals;
 
 public class InterestCalculatorTest {

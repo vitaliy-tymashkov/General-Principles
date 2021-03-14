@@ -6,7 +6,11 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
-public class InterestCalculatorTestHelper {
+public final class InterestCalculatorTestUtility {
+
+    private InterestCalculatorTestUtility() {
+        throw new UnsupportedOperationException();
+    }
 
     public static Account makeAccountDetails(double balance, int age, int startedYearsAgo) {
         AccountDetails accountDetails = new AccountDetails();
