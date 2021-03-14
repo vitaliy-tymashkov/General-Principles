@@ -7,9 +7,9 @@ import java.util.Date;
 
 public class AccountDetails implements Account {
     private Date birth;
-    private int age;
-    private BigDecimal balance;
     private Date startDate;
+    private BigDecimal balance;
+    private int age;
 
     @Override
     public Date getBirth() {

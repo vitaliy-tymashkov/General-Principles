@@ -15,7 +15,6 @@ public class InterestCalculator implements Profitable {
     private static final double INTEREST_PERCENT = 4.5d;
     private static final int LEAP_YEAR_SHIFT = 1;
 
-
     public BigDecimal calculateInterest(AccountDetails accountDetails) {
         if (isAccountStartedAfterBonusAge(accountDetails)) {
             return interest(accountDetails);
