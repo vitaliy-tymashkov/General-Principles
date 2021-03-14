@@ -10,6 +10,8 @@ import static org.junit.Assert.assertEquals;
 
 public class InterestCalculatorTest {
 
+    private static final double DELTA = 0.00000001;
+
     @Test
     public void shouldCalculateZeroInterestIfAccountStartedBeforeBonusAge() {
         assertInterest(makeAccountDetails(100, 22, 20), 0);
@@ -58,8 +60,6 @@ public class InterestCalculatorTest {
     }
 
     private void assertInterest(Account accountDetails, double expected) {
-        assertEquals(expected, new InterestCalculator().calculateInterest((AccountDetails) accountDetails).doubleValue(), 0.00000001);
+        assertEquals(expected, new InterestCalculator().calculateInterest((AccountDetails) accountDetails).doubleValue(), DELTA);
     }
-
-
 }
