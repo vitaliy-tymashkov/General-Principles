@@ -4,38 +4,50 @@ import com.epam.engx.cleancode.comments.task1.thirdpartyjar.InvalidInputExceptio
 
 public class MortgageInstallmentCalculator {
 
-    /**
-     *
-     * @param p principal amount
-     * @param t term of mortgage in years
-     * @param r rate of interest
-     * @return monthly payment amount
-     */
+    private static final int MINIMUM_VALUE = 0;
+    private static final int MONTHS_IN_YEAR = 12;
+    private static final double RATE_OF_INTEREST_IN_PERCENT_BASE = 100.0D;
+
     public static double calculateMonthlyPayment(
-            int p, int t, double r) {
+            int principalAmount, int termOfMortgageInYears, double rateOfInterestInPercent) {
 
-        //cannot have negative loanAmount, term duration and rate of interest
-        if (p < 0 || t <= 0 || r < 0) {
-            throw new InvalidInputException("Negative values are not allowed");
-        }
+        checkForNegativeValues(principalAmount, termOfMortgageInYears, rateOfInterestInPercent);
 
-        // Convert interest rate into a decimal - eg. 6.5% = 0.065
-        r /= 100.0;
-
-        // convert term in years to term in months
-        double tim = t * 12;
+        double termInMonths = getTermInMonths(termOfMortgageInYears);
+        double rateOfInterestDecimalValue = getRateOfInterestDecimalValue(rateOfInterestInPercent);
+        double monthlyRate = getMonthlyRate(rateOfInterestDecimalValue);
 
         //for zero interest rates
-        if(r==0)
-            return  p/tim;
+        if(rateOfInterestDecimalValue==0) {
+            return  principalAmount/termInMonths;
+        }
 
-        // convert into monthly rate
-        double m = r / 12.0;
 
-        // Calculate the monthly payment
-        // The Math.pow() method is used calculate values raised to a power
-        double monthlyPayment = (p * m) / (1 - Math.pow(1 + m, -tim));
+        return getMonthlyPayment(principalAmount, termInMonths, monthlyRate);
+    }
 
-        return monthlyPayment;
+    private static double getRateOfInterestDecimalValue(double rateOfInterestInPercent) {
+        return rateOfInterestInPercent / RATE_OF_INTEREST_IN_PERCENT_BASE;
+    }
+
+    private static int getTermInMonths(int termOfMortgageInYears) {
+        return termOfMortgageInYears * MONTHS_IN_YEAR;
+    }
+
+    private static double getMonthlyRate(double rateOfInterest) {
+        return rateOfInterest / (double) MONTHS_IN_YEAR;
+    }
+
+    private static void checkForNegativeValues(int principalAmount, int termOfMortgageInYears, double rateOfInterest) {
+        if (principalAmount < MINIMUM_VALUE || termOfMortgageInYears <= MINIMUM_VALUE || rateOfInterest < MINIMUM_VALUE) {
+            throw new InvalidInputException("Negative values are not allowed");
+        }
+    }
+
+    private static double getMonthlyPayment(int principalAmount, double termInMonths, double monthlyRate) {
+        double totalAmount = principalAmount * monthlyRate;
+        double numberOfPayments = 1 - Math.pow(1 + monthlyRate, -termInMonths);
+
+        return totalAmount / numberOfPayments;
     }
 }
