@@ -10,6 +10,7 @@ import static com.epam.engx.cleancode.errorhandling.task1.ERROR_ENUM.*;
 
 public class UserReportBuilder {
 
+    private static final int MINIMUM_VALUE = 0;
     private UserDao userDao;
 
     public Double getUserTotalOrderAmount(String userId) {
@@ -43,17 +44,20 @@ public class UserReportBuilder {
     }
 
     private Double calculateTotal(List<Order> orders) {
-        Double sum = 0.0D;
-        for (Order order : orders) {
-            if (order.isSubmitted()) {
-                Double total = order.total();
-                if (total < 0) {
-                    throw new InvalidUserException(ORDER_TOTAL_LESS_THAN_ZERO);
-                }
-                sum += total;
-            }
-        }
-        return sum;
+        return orders.stream()
+                .filter(Order::isSubmitted)
+                .filter(order -> {
+                    if (isLessZero(order)) {
+                        throw new InvalidUserException(ORDER_TOTAL_LESS_THAN_ZERO);
+                    }
+                    return true;
+                })
+                .mapToDouble(Order::total)
+                .sum();
+    }
+
+    private boolean isLessZero(Order order) {
+        return order.total() < MINIMUM_VALUE;
     }
 
     public void setUserDao(UserDao userDao) {
