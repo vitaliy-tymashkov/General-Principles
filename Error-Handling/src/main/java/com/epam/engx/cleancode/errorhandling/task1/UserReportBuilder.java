@@ -43,24 +43,26 @@ public class UserReportBuilder {
         return orders;
     }
 
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
     private Double calculateTotal(List<Order> orders) {
         return orders.stream()
                 .filter(Order::isSubmitted)
-                .filter(order -> {
-                    if (isLessZero(order)) {
-                        throw new InvalidUserException(ORDER_TOTAL_LESS_THAN_ZERO);
-                    }
-                    return true;
-                })
+                .filter(this::throwExceptionIfOrderTotalIsLessThanZero)
                 .mapToDouble(Order::total)
                 .sum();
     }
 
-    private boolean isLessZero(Order order) {
-        return order.total() < MINIMUM_VALUE;
+    private boolean throwExceptionIfOrderTotalIsLessThanZero(Order order) {
+        if (isLessZero(order)) {
+            throw new InvalidUserException(ORDER_TOTAL_LESS_THAN_ZERO);
+        }
+        return true;
     }
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
+    private boolean isLessZero(Order order) {
+        return order.total() < MINIMUM_VALUE;
     }
 }
