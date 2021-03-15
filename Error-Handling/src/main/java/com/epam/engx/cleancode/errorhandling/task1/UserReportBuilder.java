@@ -49,16 +49,20 @@ public class UserReportBuilder {
     private Double calculateTotal(List<Order> orders) {
         return orders.stream()
                 .filter(Order::isSubmitted)
-                .filter(this::throwExceptionIfOrderTotalIsLessThanZero)
+                .filter(this::isOrderTotalIsLessThanZero)
                 .mapToDouble(Order::total)
                 .sum();
     }
 
-    private boolean throwExceptionIfOrderTotalIsLessThanZero(Order order) {
+    private boolean isOrderTotalIsLessThanZero(Order order) {
+        validateTotalFromOrder(order);
+        return true;
+    }
+
+    private void validateTotalFromOrder(Order order) {
         if (isLessZero(order)) {
             throw new InvalidUserException(ORDER_TOTAL_LESS_THAN_ZERO);
         }
-        return true;
     }
 
     private boolean isLessZero(Order order) {
