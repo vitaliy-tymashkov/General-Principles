@@ -22,9 +22,8 @@ public final class InterestCalculatorUtility {
     }
 
     public static BigDecimal getInterest(AccountDetails accountDetails, double annualInterestRate) {
-        Date now = new Date();
         return BigDecimal.valueOf((accountDetails.getBalance().doubleValue()
-                * durationBetweenDatesInYears(accountDetails.getStartDate(), now)
+                * durationBetweenDatesInYears(accountDetails.getStartDate(), new Date())
                 * annualInterestRate)
                 / PERCENT_BASE);
     }
@@ -44,11 +43,11 @@ public final class InterestCalculatorUtility {
     }
 
     private static int getDifferenceInYear(Calendar startCalendar, Calendar endCalendar, int differenceInYears) {
-        if (isStartDayHigherThanEndDay(startCalendar.get(Calendar.DAY_OF_YEAR), endCalendar.get(Calendar.DAY_OF_YEAR))) {
-            return differenceInYears - YEAR_CORRECTION;
-        } else {
-            return differenceInYears;
-        }
+        return checkStartAndEndDays(startCalendar, endCalendar) ? differenceInYears - YEAR_CORRECTION : differenceInYears;
+    }
+
+    private static boolean checkStartAndEndDays(Calendar startCalendar, Calendar endCalendar) {
+        return isStartDayHigherThanEndDay(startCalendar.get(Calendar.DAY_OF_YEAR), endCalendar.get(Calendar.DAY_OF_YEAR));
     }
 
     private static boolean isStartDayHigherThanEndDay(int dayOfStartYear, int dayOfEndYear) {

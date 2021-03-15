@@ -15,7 +15,10 @@ public class UserReportBuilder {
 
     public Double getUserTotalOrderAmount(String userId) {
         checkDaoConnection();
-        User user = checkUser(userId);
+        User user = userDao.getUser(userId);
+        if (user == null) {
+            throw new InvalidUserException(INVALID_USER);
+        }
         List<Order> orders = checkUserOrders(user);
 
         return calculateTotal(orders);
@@ -27,20 +30,16 @@ public class UserReportBuilder {
         }
     }
 
-    private User checkUser(String userId) {
-        User user = userDao.getUser(userId);
-        if (user == null) {
-            throw new InvalidUserException(INVALID_USER);
-        }
-        return user;
-    }
-
     private List<Order> checkUserOrders(User user) {
         List<Order> orders = user.getAllOrders();
+        validateOrders(orders);
+        return orders;
+    }
+
+    private void validateOrders(List<Order> orders) {
         if (orders.isEmpty()) {
             throw new InvalidUserException(EMPTY_ORDERS);
         }
-        return orders;
     }
 
     public void setUserDao(UserDao userDao) {
