@@ -21,12 +21,7 @@ public class InterestCalculator implements Profitable {
     }
 
     private BigDecimal interest(AccountDetails accountDetails) {
-        BigDecimal interest;
-        if (isSeniorAge(durationBetweenDatesInYears(accountDetails.getBirth(), new Date()))) {
-            interest = getInterest(accountDetails, SENIOR_PERCENT);
-        } else {
-            interest = getInterest(accountDetails, COMMON_PERCENT);
-        }
-        return interest;
+        return isSeniorAge(durationBetweenDatesInYears(accountDetails.getBirth(), new Date()))
+                ? getInterest(accountDetails, SENIOR_PERCENT) : getInterest(accountDetails, COMMON_PERCENT);
     }
 }
