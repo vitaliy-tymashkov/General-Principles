@@ -6,7 +6,7 @@ import com.epam.engx.cleancode.errorhandling.task1.thirdpartyjar.UserDao;
 
 import java.util.List;
 
-import static com.epam.engx.cleancode.errorhandling.task1.ERROR_ENUM.*;
+import static com.epam.engx.cleancode.errorhandling.task1.ErrorStatus.*;
 
 public class UserReportBuilder {
 
@@ -14,26 +14,38 @@ public class UserReportBuilder {
     private UserDao userDao;
 
     public Double getUserTotalOrderAmount(String userId) {
-        checkDaoConnection();
+        validateDaoOnNull();
         User user = userDao.getUser(userId);
-        if (user == null) {
-            throw new InvalidUserException(INVALID_USER);
-        }
-        List<Order> orders = checkUserOrders(user);
+        validateUserOnNull(user);
+        List<Order> orders = getUserTotalOrderAmount(user);
 
         return calculateTotal(orders);
     }
 
-    private void checkDaoConnection() {
+    private void validateDaoOnNull() {
         if (userDao == null) {
             throw new DatabaseConnectionException();
         }
     }
 
-    private List<Order> checkUserOrders(User user) {
+    private void validateUserOnNull(User user) {
+        if (user == null) {
+            throw new InvalidUserException(INVALID_USER);
+        }
+    }
+
+    private List<Order> getUserTotalOrderAmount(User user) {
         List<Order> orders = user.getAllOrders();
         validateOrders(orders);
         return orders;
+    }
+
+    private Double calculateTotal(List<Order> orders) {
+        return orders.stream()
+                .filter(Order::isSubmitted)
+                .filter(this::isOrderTotalIsLessThanZero)
+                .mapToDouble(Order::total)
+                .sum();
     }
 
     private void validateOrders(List<Order> orders) {
@@ -44,14 +56,6 @@ public class UserReportBuilder {
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
-    }
-
-    private Double calculateTotal(List<Order> orders) {
-        return orders.stream()
-                .filter(Order::isSubmitted)
-                .filter(this::isOrderTotalIsLessThanZero)
-                .mapToDouble(Order::total)
-                .sum();
     }
 
     private boolean isOrderTotalIsLessThanZero(Order order) {
