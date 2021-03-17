@@ -35,18 +35,14 @@ public class UserReportBuilder {
         }
     }
 
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
     private List<Order> getUserTotalOrderAmount(User user) {
         List<Order> orders = user.getAllOrders();
         validateOrders(orders);
         return orders;
-    }
-
-    private double calculateTotal(List<Order> orders) {
-        return orders.stream()
-                .filter(Order::isSubmitted)
-                .filter(this::isOrderTotalIsLessThanZero)
-                .mapToDouble(Order::total)
-                .sum();
     }
 
     private void validateOrders(List<Order> orders) {
@@ -55,22 +51,27 @@ public class UserReportBuilder {
         }
     }
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
+    private double calculateTotal(List<Order> orders) {
+        validateTotalFromOrders(orders);
+        return orders.stream()
+                .filter(Order::isSubmitted)
+                .mapToDouble(Order::total)
+                .sum();
     }
 
-    private boolean isOrderTotalIsLessThanZero(Order order) {
-        validateTotalFromOrder(order);
-        return true;
-    }
-
-    private void validateTotalFromOrder(Order order) {
-        if (isLessZero(order)) {
+    private void validateTotalFromOrders(List<Order> orders) {
+        if(isAnyInvalidOrder(orders)){
             throw new InvalidUserException(ORDER_TOTAL_LESS_THAN_ZERO);
         }
     }
 
-    private boolean isLessZero(Order order) {
+    private boolean isAnyInvalidOrder(List<Order> orders) {
+        return orders.stream()
+                    .filter(Order::isSubmitted)
+                    .anyMatch(this::isOrderTotalIsLessThanZero);
+    }
+
+    private boolean isOrderTotalIsLessThanZero(Order order) {
         return order.total() < MINIMUM_VALUE;
     }
 }
