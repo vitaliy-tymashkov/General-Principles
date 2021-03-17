@@ -53,6 +53,10 @@ public class UserReportBuilder {
 
     private double calculateTotal(List<Order> orders) {
         validateTotalFromOrders(orders);
+        return getSumOfTotals(orders);
+    }
+
+    private double getSumOfTotals(List<Order> orders) {
         return orders.stream()
                 .filter(Order::isSubmitted)
                 .mapToDouble(Order::total)
