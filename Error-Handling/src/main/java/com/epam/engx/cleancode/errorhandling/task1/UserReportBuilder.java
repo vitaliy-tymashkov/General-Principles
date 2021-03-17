@@ -11,9 +11,10 @@ import static com.epam.engx.cleancode.errorhandling.task1.ErrorStatus.*;
 public class UserReportBuilder {
 
     private static final int MINIMUM_VALUE = 0;
+
     private UserDao userDao;
 
-    public Double getUserTotalOrderAmount(String userId) {
+    public double getUserTotalOrderAmount(String userId) {
         validateDaoOnNull();
         User user = userDao.getUser(userId);
         validateUserOnNull(user);
@@ -40,7 +41,7 @@ public class UserReportBuilder {
         return orders;
     }
 
-    private Double calculateTotal(List<Order> orders) {
+    private double calculateTotal(List<Order> orders) {
         return orders.stream()
                 .filter(Order::isSubmitted)
                 .filter(this::isOrderTotalIsLessThanZero)
